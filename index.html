@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CRUD de Pizzas</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="header">
+      <h1>Gerenciador de Pizzas</h1>
+    </div>
+
+    <div id="container">
+      <h2>Adicionar/Editar Pizza</h2>
+      <div id="form-container">
+        <input type="text" id="sabor" placeholder="Sabor da Pizza" />
+        <select id="tamanho">
+          <option value="pequeno">Pequeno (6 fatias)</option>
+          <option value="medio">Médio (8 fatias)</option>
+          <option value="grande">Grande (10 fatias)</option>
+          <option value="gigante">Gigante (12 fatias)</option>
+        </select>
+        <select id="tipo">
+          <option value="doce">Doce</option>
+          <option value="salgado">Salgado</option>
+        </select>
+        <textarea
+          id="ingredientes"
+          placeholder="Ingredientes da Pizza"
+        ></textarea>
+        <input type="hidden" id="editar-indice" value="" />
+        <input
+          type="button"
+          id="acao-button"
+          value="Adicionar"
+          onclick="adicionarOuEditarPizza()"
+        />
+      </div>
+
+      <h2>Lista de Pizzas</h2>
+      <ul id="lista-pizzas"></ul>
+    </div>
+
+    <!-- LÓGICA -->
+    <script>
+      const pizzas = [];
+
+      function adicionarOuEditarPizza() {
+        const sabor = document.getElementById("sabor").value;
+        const tamanho = document.getElementById("tamanho").value;
+        const tipo = document.getElementById("tipo").value;
+        const ingredientes = document.getElementById("ingredientes").value;
+        const editarIndice = document.getElementById("editar-indice").value;
+        const acaoButton = document.getElementById("acao-button");
+
+        if (sabor) {
+          if (editarIndice === "") {
+            const pizza = { sabor, tamanho, tipo, ingredientes };
+            pizzas.push(pizza);
+          } else {
+            const index = parseInt(editarIndice);
+            pizzas[index].sabor = sabor;
+            pizzas[index].tamanho = tamanho;
+            pizzas[index].tipo = tipo;
+            pizzas[index].ingredientes = ingredientes;
+            document.getElementById("editar-indice").value = "";
+            acaoButton.value = "Adicionar";
+          }
+
+          atualizarListaPizzas();
+          limparCampos();
+        }
+      }
+
+      function atualizarListaPizzas() {
+        const listaPizzas = document.getElementById("lista-pizzas");
+        listaPizzas.innerHTML = "";
+
+        pizzas.forEach((pizza, index) => {
+          const listItem = document.createElement("li");
+          listItem.innerHTML = `Sabor: ${pizza.sabor}, Tamanho: ${pizza.tamanho}, Tipo: ${pizza.tipo}, Ingredientes: ${pizza.ingredientes}`;
+
+          const editarButton = document.createElement("button");
+          editarButton.textContent = "Editar";
+          editarButton.onclick = () => editarPizza(index);
+
+          const deleteButton = document.createElement("button");
+          deleteButton.textContent = "Excluir";
+          deleteButton.onclick = () => excluirPizza(index);
+
+          listItem.appendChild(editarButton);
+          listItem.appendChild(deleteButton);
+          listaPizzas.appendChild(listItem);
+        });
+      }
+
+      function editarPizza(index) {
+        const pizza = pizzas[index];
+        document.getElementById("sabor").value = pizza.sabor;
+        document.getElementById("tamanho").value = pizza.tamanho;
+        document.getElementById("tipo").value = pizza.tipo;
+        document.getElementById("ingredientes").value = pizza.ingredientes;
+        document.getElementById("editar-indice").value = index;
+        document.getElementById("acao-button").value = "Atualizar";
+      }
+
+      function excluirPizza(index) {
+        if (confirm("Deseja realmente excluir esta pizza?")) {
+          pizzas.splice(index, 1);
+          atualizarListaPizzas();
+        }
+      }
+
+      function limparCampos() {
+        document.getElementById("sabor").value = "";
+        document.getElementById("tamanho").value = "pequeno";
+        document.getElementById("tipo").value = "doce";
+        document.getElementById("ingredientes").value = "";
+        document.getElementById("editar-indice").value = "";
+      }
+
+      atualizarListaPizzas();
+    </script>
+
+    <!-- FIRE BASE -->
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-analytics.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyB3KuPCxDKFWaVlG-nCKp1ZrYwR2TuhPFI",
+        authDomain: "ipizza-tcc.firebaseapp.com",
+        projectId: "ipizza-tcc",
+        storageBucket: "ipizza-tcc.appspot.com",
+        messagingSenderId: "702160010379",
+        appId: "1:702160010379:web:b4d4d29e95e1fe0b48288e",
+        measurementId: "G-P1Y6ZS7GZL",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+    </script>
+  </body>
+</html>
