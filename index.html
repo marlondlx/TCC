@@ -62,13 +62,7 @@
         </div>
         <div class="input-label">
           <label for="imageInput">Imagem da Pizza</label>
-          <input
-            class="input"
-            type="file"
-            id="imageInput"
-            accept="image/*"
-            onchange="exibirImagem()"
-          />
+          <input class="input" type="file" id="imageInput" accept="image/*" />
           <img
             id="previewImage"
             src="#"
@@ -78,62 +72,90 @@
           />
         </div>
         <input type="hidden" id="editar-indice" value="" />
-        <!-- <button id="acao-button" onclick="criarPizza()">Adicionar</button> -->
-        <button id="acao-button">Adicionar</button> 
+        <button id="acao-button">Adicionar</button>
       </div>
 
       <h2 id="titulo-lista">Lista de Pizzas</h2>
       <ul id="lista-pizzas"></ul>
     </main>
+    <!-- Lógica Antiga -->
+    <script type="module">
+      //Iniciando Firebase
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        deleteDoc,
+        doc,
+        setDoc,
+        getDocs,
+      } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
 
-    <!-- LÓGICA 
-    <script>
-      const pizzas = [];
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
 
-      function adicionarOuEditarPizza() {
+      const firebaseConfig = {
+        apiKey: "AIzaSyB3KuPCxDKFWaVlG-nCKp1ZrYwR2TuhPFI",
+        authDomain: "ipizza-tcc.firebaseapp.com",
+        projectId: "ipizza-tcc",
+        storageBucket: "ipizza-tcc.appspot.com",
+        messagingSenderId: "702160010379",
+        appId: "1:702160010379:web:b4d4d29e95e1fe0b48288e",
+        measurementId: "G-P1Y6ZS7GZL",
+      };
+      // Initialize Firebase
+      const firebaseApp = initializeApp(firebaseConfig);
+      const db = getFirestore(firebaseApp);
+      const pizzaCollectionRef = collection(db, "pizzas");
+
+      const pizzas = await getPizzas();
+
+
+
+      async function adicionarPizza() {
         const sabor = document.getElementById("sabor").value;
         const tamanho = document.getElementById("tamanho").value;
         const tipo = document.getElementById("tipo").value;
         const ingredientes = document.getElementById("ingredientes").value;
         const editarIndice = document.getElementById("editar-indice").value;
         const acaoButton = document.getElementById("acao-button");
-        const image = document.getElementById("imageInput").files[0];
+        const image_input = document.getElementById("imageInput").files[0];
+        const image = await getBaseUrl(image_input);
 
         if (sabor) {
+          const pizza = { sabor, tamanho, tipo, ingredientes, image };
           if (editarIndice === "") {
-            const pizza = { sabor, tamanho, tipo, ingredientes, image };
-            pizzas.push(pizza);
+            createPizzas(pizza);
           } else {
             const index = parseInt(editarIndice);
-            pizzas[index].sabor = sabor;
-            pizzas[index].tamanho = tamanho;
-            pizzas[index].tipo = tipo;
-            pizzas[index].ingredientes = ingredientes;
-            pizzas[index].image = image;
+            pizzas[index] = pizza;
+            updatePizza(pizza["id"], pizzas[index]);
             document.getElementById("editar-indice").value = "";
           }
-
-          atualizarListaPizzas();
-          limparCampos();
         }
+        atualizarListaPizzas();
+        limparCampos();
       }
 
-      function atualizarListaPizzas() {
+      async function atualizarListaPizzas() {
+        const pizzas = await getPizzas();
         const listaPizzas = document.getElementById("lista-pizzas");
         listaPizzas.innerHTML = "";
-
         pizzas.forEach((pizza, index) => {
           const listItem = document.createElement("li");
           listItem.innerHTML = `<strong>Sabor:</strong> ${pizza.sabor}</br><strong>Tamanho:</strong> ${pizza.tamanho}</br><strong>Tipo:</strong> ${pizza.tipo}</br><strong>Ingredientes:</strong> ${pizza.ingredientes}`;
           listItem.appendChild(document.createElement("br"));
 
           if (pizza.image) {
-            const imageElement = document.createElement("img");
-            imageElement.src = URL.createObjectURL(pizza.image);
-            imageElement.alt = "Imagem da Pizza";
-            imageElement.style.maxWidth = "150px";
-            imageElement.style.maxHeight = "150px";
-            listItem.appendChild(imageElement);
+            base64ToImage(pizza.image)
+              .then((imageElement) => {
+                imageElement.alt = "Imagem da Pizza";
+                imageElement.style.maxWidth = "150px";
+                imageElement.style.maxHeight = "150px";
+                listItem.appendChild(imageElement);
+              })
+              .catch((error) => {
+                console.error("Error converting base64 to image:", error);
+              });
           }
 
           const editarButton = document.createElement("button");
@@ -151,7 +173,8 @@
         });
       }
 
-      function editarPizza(index) {
+      async function editarPizza(index) {
+        const pizzas = await getPizzas();
         const pizza = pizzas[index];
         document.getElementById("sabor").value = pizza.sabor;
         document.getElementById("tamanho").value = pizza.tamanho;
@@ -159,7 +182,6 @@
         document.getElementById("ingredientes").value = pizza.ingredientes;
         document.getElementById("editar-indice").value = index;
         document.getElementById("acao-button").value = "Atualizar";
-
         if (pizza.image) {
           document.getElementById("previewImage").src = URL.createObjectURL(
             pizza.image
@@ -167,9 +189,11 @@
         }
       }
 
-      function excluirPizza(index) {
+      async function excluirPizza(index) {
+        const pizzas = await getPizzas();
         if (confirm("Deseja realmente excluir esta pizza?")) {
-          pizzas.splice(index, 1);
+          const pizza = pizzas[index];
+          deletePizza(pizza["id"]);
           atualizarListaPizzas();
         }
       }
@@ -201,91 +225,100 @@
       }
 
       atualizarListaPizzas();
-    </script>
 
-   
-    
-    <script type="module">
-      import {
-        getFirestore,
-        collection,
-        addDoc,
-        deleteDoc,
-        doc,
-        setDoc,
-        getDocs,
-      } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
+      document
+        .getElementById("acao-button")
+        .addEventListener("click", function () {
+          adicionarPizza();
+        });
 
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+      document
+        .getElementById("imageInput")
+        .addEventListener("change", function () {
+          exibirImagem();
+        });
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyB3KuPCxDKFWaVlG-nCKp1ZrYwR2TuhPFI",
-        authDomain: "ipizza-tcc.firebaseapp.com",
-        projectId: "ipizza-tcc",
-        storageBucket: "ipizza-tcc.appspot.com",
-        messagingSenderId: "702160010379",
-        appId: "1:702160010379:web:b4d4d29e95e1fe0b48288e",
-        measurementId: "G-P1Y6ZS7GZL",
-      };
+      // ------------------- FIREBASE ------------------- //
 
-      const saborInput = document.getElementById("sabor");
-      const tamanhoInput = document.getElementById("tamanho");
-      const tipoInput = document.getElementById("tipo");
-      const ingredientesInput = document.getElementById("ingredientes");
-      const criarPizzaButton = document.getElementById("criarPizzaButton");
-
-      // Initialize Firebase
-      const firebaseApp = initializeApp(firebaseConfig);
-      const db = getFirestore(firebaseApp);
-      const pizzaCollectionRef = collection(db, "pizzas");
-
-      async function criarPizza() {
-        const sabor = saborInput.value;
-        const tamanho = tamanhoInput.value;
-        const tipo = tipoInput.value;
-        const ingredientes = ingredientesInput.value;
-
+      // ------
+      // CREATE
+      // ------
+      async function createPizzas(dados) {
         try {
-          await addDoc(pizzaCollectionRef, {
-            sabor,
-            tamanho,
-            tipo,
-            ingredientes,
-          });
+          await addDoc(pizzaCollectionRef, dados);
           console.log("Pizza criada com sucesso!");
         } catch (error) {
           console.error("Erro ao criar a pizza:", error);
         }
       }
 
-      document
-        .getElementById("acao-button")
-        .addEventListener("click", function () {
-          criarPizza();
-        });
-
-      //criarPizzaButton.addEventListener("acao-button", criarPizza);
-      /*
-      const getPizzas = async () => {
+      // ----
+      // READ
+      // ----
+      async function getPizzas() {
         const data = await getDocs(pizzaCollectionRef);
-        setPizzas(
-          data.docs.map((doc) => ({
-            ...doc.data(),
-            id: doc.id,
-          }))
-        );
-      };
-      useEffect(() => {
-        getPizzas();
-      }, [pizzas]);
+        const pizzas = await data.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        return await pizzas;
+      }
+
+      // ------
+      // UPDATE
+      // ------
+      async function updatePizza(id, dados) {
+        await setDoc(doc(db, "pizzas", id), dados);
+      }
+      // ------
+      // DELETE
+      // ------
       async function deletePizza(id) {
         const pizzaDoc = doc(db, "pizzas", id);
         await deleteDoc(pizzaDoc);
       }
-      async function atualizaPizza(id, dados) {
-        await setDoc(doc(db, "pizzas", id), dados);
+    
+      // ------------
+      // IMG > BASE64
+      // ------------
+
+      function getBaseUrl(file) {
+        return new Promise((resolve, reject) => {
+          let reader = new FileReader();
+
+          reader.onload = function () {
+            const baseString = reader.result;
+            resolve(baseString);
+          };
+
+          reader.onerror = function (error) {
+            reject(error);
+          };
+
+          reader.readAsDataURL(file);
+        });
       }
-      */
+
+      // ------------
+      // BASE64 > IMG
+      // ------------
+
+      function base64ToImage(base64String) {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+
+          img.onload = function () {
+            resolve(img);
+          };
+
+          img.onerror = function (error) {
+            reject(error);
+          };
+
+          img.src = base64String;
+        });
+      }
+    
     </script>
   </body>
 </html>
