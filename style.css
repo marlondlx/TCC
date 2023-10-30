@@ -82,16 +82,95 @@ label {
   margin: 10% 0 7.5% 0;
 }
 
-#acao-button:hover{
+#acao-button:hover {
   background-color: var(--buttons-hover);
   cursor: pointer;
 }
 
-#titulo-lista{
+#titulo-lista {
   padding: 5% 0 5% 0;
   border-top: 1px solid #000;
+  display: flex;
+  align-items: center;
+  gap: 5%;
 }
 
-ul > li {
+ul>li {
   list-style: none;
+}
+
+#container-tituloLista {
+  width: 100%;
+  background-color: var(--header);
+  border-bottom: 1px solid #000;
+}
+
+#titulo-lista {
+  padding-left: 5%;
+}
+
+.buttonListaPizza {
+  background-color: var(--buttons);
+  border: none;
+  color: var(--background);
+  padding: 3% 7%;
+  border-radius: 20px;
+  font-weight: 700;
+}
+
+.buttonListaPizza:hover {
+  background-color: var(--buttons-hover);
+  cursor: pointer;
+}
+
+#imageContainer {
+  width: 100%;
+  text-align: center;
+  margin: 4% 0;
+}
+
+.tituloPizza {
+  cursor: pointer;
+  text-decoration: underline;
+  width: 100%;
+  text-align: center;
+  font-weight: 700;
+  font-size: 18px;
+  text-transform: capitalize;
+  padding: 5%;
+  background-color: var(--input);
+  border-bottom: 1px solid #000;
+}
+
+.tituloPizza:hover {
+  background-color: var(--buttons);
+  color: var(--background);
+  text-decoration: none;
+}
+
+.detalhesContainer {
+  display: none;
+  margin-top: 5px;
+}
+
+.visible {
+  display: block !important;
+}
+
+.detalhesContainer img {
+  max-width: 200px;
+  max-height: 200px;
+}
+
+#buttonContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 5%;
+  padding-bottom: 5%;
+}
+
+.detalhes-texto {
+  font-size: 14px;
+  padding: 5% 0 0 5%;
 }
