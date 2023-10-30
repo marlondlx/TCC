@@ -1,324 +1,361 @@
 <!DOCTYPE html>
 <html lang="PT-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Roboto:wght@300;400;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="shortcut icon"
-      href="./assets/icon-logo.svg"
-      type="image/x-icon"
-    />
-    <link rel="stylesheet" href="style.css" />
-    <title>IPizza</title>
-  </head>
 
-  <body>
-    <header id="header">
-      <h1>IPIZZA</h1>
-      <img src="./assets/icon-logo.svg" alt="Logo IPizza" />
-    </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Roboto:wght@300;400;700&display=swap"
+    rel="stylesheet" />
+  <link rel="shortcut icon" href="./assets/icon-logo.svg" type="image/x-icon" />
+  <link rel="stylesheet" href="style.css" />
+  <title>IPizza</title>
+</head>
 
-    <main id="container">
-      <h2 id="adicionar-sabor">ADICIONAR NOVO SABOR</h2>
-      <div id="form-container">
-        <div class="input-label">
-          <label for="sabor">Sabor da Pizza</label>
-          <input
-            class="input"
-            type="text"
-            id="sabor"
-            placeholder="Ex: Calabresa, Mussarela..."
-          />
-        </div>
-        <div class="input-label">
-          <label for="tamanho">Tamanho da Pizza</label>
-          <select class="input" id="tamanho">
-            <option value="pequeno">Pequeno (6 fatias)</option>
-            <option value="medio">Médio (8 fatias)</option>
-            <option value="grande">Grande (10 fatias)</option>
-            <option value="gigante">Gigante (12 fatias)</option>
-          </select>
-        </div>
-        <div class="input-label">
-          <label for="tipo">Tipo da Pizza</label>
-          <select class="input" id="tipo">
-            <option value="doce">Doce</option>
-            <option value="salgado">Salgado</option>
-          </select>
-        </div>
-        <div class="input-label">
-          <label for="ingredientes">Ingredientes da Pizza</label>
-          <textarea
-            class="input"
-            id="ingredientes"
-            placeholder="Ex: Molho, Calabresa, Queijo..."
-          ></textarea>
-        </div>
-        <div class="input-label">
-          <label for="imageInput">Imagem da Pizza</label>
-          <input class="input" type="file" id="imageInput" accept="image/*" />
-          <img
-            id="previewImage"
-            src="#"
-            alt=""
-            max-width="150px"
-            max-height="150px"
-          />
-        </div>
-        <input type="hidden" id="editar-indice" value="" />
-        <button id="acao-button">Adicionar</button>
+<body>
+  <header id="header">
+    <h1>IPIZZA</h1>
+    <img src="./assets/icon-logo.svg" alt="Logo IPizza" />
+  </header>
+
+  <main id="container">
+    <h2 id="adicionar-sabor">ADICIONAR NOVO SABOR</h2>
+    <div id="form-container">
+      <div class="input-label">
+        <label for="sabor">Sabor da Pizza</label>
+        <input class="input" type="text" id="sabor" placeholder="Ex: Calabresa, Mussarela..." />
       </div>
+      <div class="input-label">
+        <label for="tamanho">Tamanho da Pizza</label>
+        <select class="input" id="tamanho">
+          <option value="pequeno">Pequeno (6 fatias)</option>
+          <option value="medio">Médio (8 fatias)</option>
+          <option value="grande">Grande (10 fatias)</option>
+          <option value="gigante">Gigante (12 fatias)</option>
+        </select>
+      </div>
+      <div class="input-label">
+        <label for="tipo">Tipo da Pizza</label>
+        <select class="input" id="tipo">
+          <option value="doce">Doce</option>
+          <option value="salgado">Salgado</option>
+        </select>
+      </div>
+      <div class="input-label">
+        <label for="ingredientes">Ingredientes da Pizza</label>
+        <textarea class="input" id="ingredientes" placeholder="Ex: Molho, Calabresa, Queijo..."></textarea>
+      </div>
+      <div class="input-label">
+        <label for="imageInput">Imagem da Pizza</label>
+        <input class="input" type="file" id="imageInput" accept="image/*" />
+        <img id="previewImage" src="#" alt="" max-width="150px" max-height="150px" />
+      </div>
+      <input type="hidden" id="editar-indice" value="" />
+      <button id="acao-button">Adicionar</button>
+    </div>
 
-      <h2 id="titulo-lista">Lista de Pizzas</h2>
-      <ul id="lista-pizzas"></ul>
-    </main>
-    <!-- Lógica Antiga -->
-    <script type="module">
-      //Iniciando Firebase
-      import {
-        getFirestore,
-        collection,
-        addDoc,
-        deleteDoc,
-        doc,
-        setDoc,
-        getDocs,
-      } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
+  </main>
+  <section id="secao-lista">
+    <div id="container-tituloLista">
+      <h2 id="titulo-lista">Lista de Pizzas<img src="./assets/menu.svg" alt=""></h2>
+    </div>
+    <ul id="lista-pizzas"></ul>
+  </section>
+  <!-- Lógica Antiga -->
+  <script type="module">
+    //Iniciando Firebase
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      deleteDoc,
+      doc,
+      setDoc,
+      getDocs,
+    } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
 
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyB3KuPCxDKFWaVlG-nCKp1ZrYwR2TuhPFI",
-        authDomain: "ipizza-tcc.firebaseapp.com",
-        projectId: "ipizza-tcc",
-        storageBucket: "ipizza-tcc.appspot.com",
-        messagingSenderId: "702160010379",
-        appId: "1:702160010379:web:b4d4d29e95e1fe0b48288e",
-        measurementId: "G-P1Y6ZS7GZL",
-      };
-      // Initialize Firebase
-      const firebaseApp = initializeApp(firebaseConfig);
-      const db = getFirestore(firebaseApp);
-      const pizzaCollectionRef = collection(db, "pizzas");
+    const firebaseConfig = {
+      apiKey: "AIzaSyB3KuPCxDKFWaVlG-nCKp1ZrYwR2TuhPFI",
+      authDomain: "ipizza-tcc.firebaseapp.com",
+      projectId: "ipizza-tcc",
+      storageBucket: "ipizza-tcc.appspot.com",
+      messagingSenderId: "702160010379",
+      appId: "1:702160010379:web:b4d4d29e95e1fe0b48288e",
+      measurementId: "G-P1Y6ZS7GZL",
+    };
+    // Initialize Firebase
+    const firebaseApp = initializeApp(firebaseConfig);
+    const db = getFirestore(firebaseApp);
+    const pizzaCollectionRef = collection(db, "pizzas");
 
-      const pizzas = await getPizzas();
+    const pizzas = await getPizzas();
 
 
 
-      async function adicionarPizza() {
-        const sabor = document.getElementById("sabor").value;
-        const tamanho = document.getElementById("tamanho").value;
-        const tipo = document.getElementById("tipo").value;
-        const ingredientes = document.getElementById("ingredientes").value;
-        const editarIndice = document.getElementById("editar-indice").value;
-        const acaoButton = document.getElementById("acao-button");
-        const image_input = document.getElementById("imageInput").files[0];
-        const image = await getBaseUrl(image_input);
+    async function adicionarPizza() {
+      const sabor = document.getElementById("sabor").value;
+      const tamanho = document.getElementById("tamanho").value;
+      const tipo = document.getElementById("tipo").value;
+      const ingredientes = document.getElementById("ingredientes").value;
+      const editarIndice = document.getElementById("editar-indice").value;
+      const acaoButton = document.getElementById("acao-button");
+      const image_input = document.getElementById("imageInput").files[0];
+      const image = await getBaseUrl(image_input);
 
-        if (sabor) {
-          const pizza = { sabor, tamanho, tipo, ingredientes, image };
-          if (editarIndice === "") {
-            createPizzas(pizza);
-          } else {
-            const index = parseInt(editarIndice);
-            pizzas[index] = pizza;
-            updatePizza(pizza["id"], pizzas[index]);
-            document.getElementById("editar-indice").value = "";
-          }
+      if (sabor) {
+        const pizza = { sabor, tamanho, tipo, ingredientes, image };
+        if (editarIndice === "") {
+          createPizzas(pizza);
+        } else {
+          const index = parseInt(editarIndice);
+          pizzas[index] = pizza;
+          updatePizza(pizza["id"], pizzas[index]);
+          document.getElementById("editar-indice").value = "";
         }
-        atualizarListaPizzas();
-        limparCampos();
       }
+      atualizarListaPizzas();
+      limparCampos();
+    }
 
-      async function atualizarListaPizzas() {
-        const pizzas = await getPizzas();
-        const listaPizzas = document.getElementById("lista-pizzas");
-        listaPizzas.innerHTML = "";
-        pizzas.forEach((pizza, index) => {
-          const listItem = document.createElement("li");
-          listItem.innerHTML = `<strong>Sabor:</strong> ${pizza.sabor}</br><strong>Tamanho:</strong> ${pizza.tamanho}</br><strong>Tipo:</strong> ${pizza.tipo}</br><strong>Ingredientes:</strong> ${pizza.ingredientes}`;
-          listItem.appendChild(document.createElement("br"));
+    async function atualizarListaPizzas() {
+      const listaPizzas = document.getElementById("lista-pizzas");
+      listaPizzas.innerHTML = "";
 
-          if (pizza.image) {
-            base64ToImage(pizza.image)
-              .then((imageElement) => {
-                imageElement.alt = "Imagem da Pizza";
-                imageElement.style.maxWidth = "150px";
-                imageElement.style.maxHeight = "150px";
-                listItem.appendChild(imageElement);
-              })
-              .catch((error) => {
-                console.error("Error converting base64 to image:", error);
-              });
-          }
+      pizzas.forEach((pizza, index) => {
+        const listItem = document.createElement("li");
 
+        const tituloPizza = document.createElement("h3");
+        tituloPizza.textContent = pizza.sabor;
+        tituloPizza.className = "tituloPizza";
+        tituloPizza.onclick = () => toggleDetalhesPizza(index); // Mudança aqui
+
+        listItem.appendChild(tituloPizza);
+
+        const detalhesContainer = document.createElement("div");
+        detalhesContainer.className = "detalhesContainer";
+        detalhesContainer.innerHTML = `<p class="detalhes-texto"><strong>TAMANHO<br/></strong>${pizza.tamanho}</p><p class="detalhes-texto"><strong>TIPO<br/></strong> ${pizza.tipo}</p><p class="detalhes-texto"><strong>INGREDIENTES<br/></strong> ${pizza.ingredientes}</p><p class="detalhes-texto"><strong>FOTO<br/></strong></p>`;
+
+        if (pizza.image) {
+          base64ToImage(pizza.image)
+            .then((imageElement) => {
+              imageElement.alt = "Imagem da Pizza";
+              imageElement.style.maxWidth = "200px";
+              imageElement.style.maxHeight = "200px";
+              imageElement.id = "imagePizza";
+              const imageContainer = document.createElement("div");
+              imageContainer.id = "imageContainer";
+              detalhesContainer.appendChild(imageContainer);
+              imageContainer.appendChild(imageElement);
+
+              const editarButton = document.createElement("button");
+              editarButton.textContent = "Editar";
+              editarButton.className = "buttonListaPizza";
+              editarButton.onclick = () => editarPizza(index);
+
+              const deleteButton = document.createElement("button");
+              deleteButton.textContent = "Excluir";
+              deleteButton.className = "buttonListaPizza";
+              deleteButton.onclick = () => excluirPizza(index);
+
+              const buttonContainer = document.createElement("div");
+              buttonContainer.id = "buttonContainer";
+
+              detalhesContainer.appendChild(buttonContainer);
+
+              buttonContainer.appendChild(editarButton);
+              buttonContainer.appendChild(deleteButton);
+            })
+            .catch((error) => {
+              console.error("Error converting base64 to image:", error);
+            });
+        } else {
           const editarButton = document.createElement("button");
           editarButton.textContent = "Editar";
+          editarButton.className = "buttonListaPizza";
           editarButton.onclick = () => editarPizza(index);
 
           const deleteButton = document.createElement("button");
           deleteButton.textContent = "Excluir";
+          deleteButton.className = "buttonListaPizza";
           deleteButton.onclick = () => excluirPizza(index);
 
-          listItem.appendChild(document.createElement("br"));
-          listItem.appendChild(editarButton);
-          listItem.appendChild(deleteButton);
-          listaPizzas.appendChild(listItem);
-        });
-      }
+          const buttonContainer = document.createElement("div");
+          buttonContainer.id = "buttonContainer";
 
-      async function editarPizza(index) {
-        const pizzas = await getPizzas();
+          detalhesContainer.appendChild(buttonContainer);
+
+          buttonContainer.appendChild(editarButton);
+          buttonContainer.appendChild(deleteButton);
+        }
+
+        listItem.appendChild(detalhesContainer);
+
+        listaPizzas.appendChild(listItem);
+      });
+
+    }
+
+    function toggleDetalhesPizza(index) {
+      const detalhesContainer = document.querySelectorAll('.detalhesContainer')[index];
+      detalhesContainer.classList.toggle('visible');
+
+      if (detalhesContainer.classList.contains('visible')) {
+        document.getElementById('secao-lista').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    async function editarPizza(index) {
+      const pizzas = await getPizzas();
+      const pizza = pizzas[index];
+      document.getElementById("sabor").value = pizza.sabor;
+      document.getElementById("tamanho").value = pizza.tamanho;
+      document.getElementById("tipo").value = pizza.tipo;
+      document.getElementById("ingredientes").value = pizza.ingredientes;
+      document.getElementById("editar-indice").value = index;
+      document.getElementById("acao-button").value = "Atualizar";
+      if (pizza.image) {
+        document.getElementById("previewImage").src = URL.createObjectURL(
+          pizza.image
+        );
+      }
+    }
+
+    async function excluirPizza(index) {
+      const pizzas = await getPizzas();
+      if (confirm("Deseja realmente excluir esta pizza?")) {
         const pizza = pizzas[index];
-        document.getElementById("sabor").value = pizza.sabor;
-        document.getElementById("tamanho").value = pizza.tamanho;
-        document.getElementById("tipo").value = pizza.tipo;
-        document.getElementById("ingredientes").value = pizza.ingredientes;
-        document.getElementById("editar-indice").value = index;
-        document.getElementById("acao-button").value = "Atualizar";
-        if (pizza.image) {
-          document.getElementById("previewImage").src = URL.createObjectURL(
-            pizza.image
-          );
-        }
+        deletePizza(pizza["id"]);
+        atualizarListaPizzas();
       }
+    }
 
-      async function excluirPizza(index) {
-        const pizzas = await getPizzas();
-        if (confirm("Deseja realmente excluir esta pizza?")) {
-          const pizza = pizzas[index];
-          deletePizza(pizza["id"]);
-          atualizarListaPizzas();
-        }
+    function limparCampos() {
+      document.getElementById("sabor").value = "";
+      document.getElementById("tamanho").value = "pequeno";
+      document.getElementById("tipo").value = "doce";
+      document.getElementById("ingredientes").value = "";
+      document.getElementById("editar-indice").value = "";
+      document.getElementById("previewImage").src = "";
+      document.getElementById("imageInput").value = "";
+    }
+
+    function exibirImagem() {
+      const input = document.getElementById("imageInput");
+      const previewImage = document.getElementById("previewImage");
+
+      const file = input.files[0];
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        previewImage.src = e.target.result;
+      };
+
+      if (file) {
+        reader.readAsDataURL(file);
       }
+    }
 
-      function limparCampos() {
-        document.getElementById("sabor").value = "";
-        document.getElementById("tamanho").value = "pequeno";
-        document.getElementById("tipo").value = "doce";
-        document.getElementById("ingredientes").value = "";
-        document.getElementById("editar-indice").value = "";
-        document.getElementById("previewImage").src = "";
-        document.getElementById("imageInput").value = "";
+
+    atualizarListaPizzas();
+
+    document
+      .getElementById("acao-button")
+      .addEventListener("click", function () {
+        adicionarPizza();
+      });
+
+    document
+      .getElementById("imageInput")
+      .addEventListener("change", function () {
+        exibirImagem();
+      });
+
+    // ------------------- FIREBASE ------------------- //
+
+    // ------
+    // CREATE
+    // ------
+    async function createPizzas(dados) {
+      try {
+        await addDoc(pizzaCollectionRef, dados);
+        console.log("Pizza criada com sucesso!");
+      } catch (error) {
+        console.error("Erro ao criar a pizza:", error);
       }
+    }
 
-      function exibirImagem() {
-        const input = document.getElementById("imageInput");
-        const previewImage = document.getElementById("previewImage");
+    // ----
+    // READ
+    // ----
+    async function getPizzas() {
+      const data = await getDocs(pizzaCollectionRef);
+      const pizzas = await data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      return await pizzas;
+    }
 
-        const file = input.files[0];
-        const reader = new FileReader();
+    // ------
+    // UPDATE
+    // ------
+    async function updatePizza(id, dados) {
+      await setDoc(doc(db, "pizzas", id), dados);
+    }
+    // ------
+    // DELETE
+    // ------
+    async function deletePizza(id) {
+      const pizzaDoc = doc(db, "pizzas", id);
+      await deleteDoc(pizzaDoc);
+    }
 
-        reader.onload = function (e) {
-          previewImage.src = e.target.result;
+    // ------------
+    // IMG > BASE64
+    // ------------
+
+    function getBaseUrl(file) {
+      return new Promise((resolve, reject) => {
+        let reader = new FileReader();
+
+        reader.onload = function () {
+          const baseString = reader.result;
+          resolve(baseString);
         };
 
-        if (file) {
-          reader.readAsDataURL(file);
-        }
-      }
+        reader.onerror = function (error) {
+          reject(error);
+        };
 
-      atualizarListaPizzas();
+        reader.readAsDataURL(file);
+      });
+    }
 
-      document
-        .getElementById("acao-button")
-        .addEventListener("click", function () {
-          adicionarPizza();
-        });
+    // ------------
+    // BASE64 > IMG
+    // ------------
 
-      document
-        .getElementById("imageInput")
-        .addEventListener("change", function () {
-          exibirImagem();
-        });
+    function base64ToImage(base64String) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
 
-      // ------------------- FIREBASE ------------------- //
+        img.onload = function () {
+          resolve(img);
+        };
 
-      // ------
-      // CREATE
-      // ------
-      async function createPizzas(dados) {
-        try {
-          await addDoc(pizzaCollectionRef, dados);
-          console.log("Pizza criada com sucesso!");
-        } catch (error) {
-          console.error("Erro ao criar a pizza:", error);
-        }
-      }
+        img.onerror = function (error) {
+          reject(error);
+        };
 
-      // ----
-      // READ
-      // ----
-      async function getPizzas() {
-        const data = await getDocs(pizzaCollectionRef);
-        const pizzas = await data.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }));
-        return await pizzas;
-      }
+        img.src = base64String;
+      });
+    }
 
-      // ------
-      // UPDATE
-      // ------
-      async function updatePizza(id, dados) {
-        await setDoc(doc(db, "pizzas", id), dados);
-      }
-      // ------
-      // DELETE
-      // ------
-      async function deletePizza(id) {
-        const pizzaDoc = doc(db, "pizzas", id);
-        await deleteDoc(pizzaDoc);
-      }
-    
-      // ------------
-      // IMG > BASE64
-      // ------------
+  </script>
+</body>
 
-      function getBaseUrl(file) {
-        return new Promise((resolve, reject) => {
-          let reader = new FileReader();
-
-          reader.onload = function () {
-            const baseString = reader.result;
-            resolve(baseString);
-          };
-
-          reader.onerror = function (error) {
-            reject(error);
-          };
-
-          reader.readAsDataURL(file);
-        });
-      }
-
-      // ------------
-      // BASE64 > IMG
-      // ------------
-
-      function base64ToImage(base64String) {
-        return new Promise((resolve, reject) => {
-          const img = new Image();
-
-          img.onload = function () {
-            resolve(img);
-          };
-
-          img.onerror = function (error) {
-            reject(error);
-          };
-
-          img.src = base64String;
-        });
-      }
-    
-    </script>
-  </body>
 </html>
